@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Command Schema",
+  "description": "The standard wrapper for downstream commands sent to devices",
+  "type": "object",
+  "required": [
+    "request_id",
+    "action",
+    "parameters"
+  ],
+
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique tracking ID"
+    },
+
+    "action": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Command name like LOCK or SET_STATE"
+    },
+
+    "parameters": {
+      "type": "object",
+      "description": "Command arguments",
+      "additionalProperties": true
+    }
+  },
+  
+  "additionalProperties": false
+}

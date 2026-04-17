@@ -1,0 +1,78 @@
+{
+  "project": "Fleexa",
+  "tables": [
+    {
+      "tableName": "Fleexa_Devices",
+      "billingMode": "PROVISIONED",
+      "readCapacity": 4,
+      "writeCapacity": 4,
+      "keySchema": [{ "attributeName": "device_id", "keyType": "HASH" }],
+      "attributeDefinitions": [{ "attributeName": "device_id", "attributeType": "S" }]
+    },
+    {
+      "tableName": "Fleexa_Telemetry",
+      "billingMode": "PROVISIONED",
+      "readCapacity": 4,
+      "writeCapacity": 4,
+      "keySchema": [
+        { "attributeName": "device_id", "keyType": "HASH" },
+        { "attributeName": "timestamp", "keyType": "RANGE" }
+      ],
+      "attributeDefinitions": [
+        { "attributeName": "device_id", "attributeType": "S" },
+        { "attributeName": "timestamp", "attributeType": "N" }
+      ],
+      "timeToLive": { "enabled": true, "attributeName": "expires_at" }
+    },
+    {
+      "tableName": "Fleexa_Alerts",
+      "billingMode": "PROVISIONED",
+      "readCapacity": 2,
+      "writeCapacity": 2,
+      "keySchema": [
+        { "attributeName": "device_id", "keyType": "HASH" },
+        { "attributeName": "timestamp", "keyType": "RANGE" }
+      ],
+      "attributeDefinitions": [
+        { "attributeName": "device_id", "attributeType": "S" },
+        { "attributeName": "timestamp", "attributeType": "N" },
+        { "attributeName": "severity", "attributeType": "S" }
+      ],
+      "globalSecondaryIndexes": [
+        {
+          "indexName": "SeverityIndex",
+          "keySchema": [
+            { "attributeName": "severity", "keyType": "HASH" },
+            { "attributeName": "timestamp", "keyType": "RANGE" }
+          ],
+          "projection": { "projectionType": "ALL" },
+          "provisionedThroughput": { "readCapacity": 2, "writeCapacity": 2 }
+        }
+      ]
+    },
+    {
+      "tableName": "Fleexa_Commands",
+      "billingMode": "PROVISIONED",
+      "readCapacity": 2,
+      "writeCapacity": 2,
+      "keySchema": [{ "attributeName": "request_id", "keyType": "HASH" }],
+      "attributeDefinitions": [
+        { "attributeName": "request_id", "attributeType": "S" },
+        { "attributeName": "device_id", "attributeType": "S" },
+        { "attributeName": "timestamp", "attributeType": "N" }
+      ],
+      "globalSecondaryIndexes": [
+        {
+          "indexName": "DeviceHistoryIndex",
+          "keySchema": [
+            { "attributeName": "device_id", "keyType": "HASH" },
+            { "attributeName": "timestamp", "keyType": "RANGE" }
+          ],
+          "projection": { "projectionType": "ALL" },
+          "provisionedThroughput": { "readCapacity": 2, "writeCapacity": 2 }
+        }
+      ],
+      "timeToLive": { "enabled": true, "attributeName": "expires_at" }
+    }
+  ]
+}
